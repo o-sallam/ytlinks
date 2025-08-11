@@ -43,6 +43,7 @@ console.log('VideoPlayer mounted', { videoId, apiRoute });
     console.log('Current time:', videoRef.current?.currentTime);
   };
 
+  console.log('Rendering VideoPlayer', { loading, error, videoDetails, videoId, apiRoute });
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
