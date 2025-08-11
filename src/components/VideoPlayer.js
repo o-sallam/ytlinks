@@ -7,11 +7,11 @@ const VideoPlayer = () => {
   const [videoDetails, setVideoDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [videoSrc, setVideoSrc] = useState('');
   const videoRef = useRef(null);
   const { videoId } = useParams();
   const apiRoute = process.env.REACT_APP_API_ROUTE || "https://ytlinks-backend-production.up.railway.app";
-console.log('VideoPlayer mounted', { videoId, apiRoute });
-  
+  console.log('VideoPlayer mounted', { videoId, apiRoute });
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
@@ -19,14 +19,9 @@ console.log('VideoPlayer mounted', { videoId, apiRoute });
         const response = await axios.get(`${apiRoute}/api/video/${videoId}`);
         setVideoDetails(response.data);
         setLoading(false);
-
-        // Set up video source after getting details
-        if (videoRef.current) {
-          const videoSrc = `${apiRoute}/api/stream/${videoId}`;
-          videoRef.current.src = videoSrc;
-          videoRef.current.load();
-          console.log('Video src set:', videoSrc);
-        }
+        const src = `${apiRoute}/api/stream/${videoId}`;
+        setVideoSrc(src);
+        console.log('Video src set:', src);
       } catch (err) {
         setError('Failed to load video details');
         setLoading(false);
@@ -34,7 +29,6 @@ console.log('VideoPlayer mounted', { videoId, apiRoute });
         console.log('Debug info', { videoId, apiRoute });
       }
     };
-
     fetchVideoDetails();
   }, [videoId, apiRoute]);
 
@@ -63,10 +57,18 @@ console.log('VideoPlayer mounted', { videoId, apiRoute });
           ref={videoRef}
           controls
           autoPlay
+          muted
           className="video-player"
           onTimeUpdate={handleTimeUpdate}
+          onError={e => {
+            console.error('Video error event:', e, videoRef.current?.error);
+            setError('فشل تحميل الفيديو. تأكد من أن السيرفر يعمل وأن الرابط صحيح.');
+          }}
+          onLoadedData={() => {
+            console.log('Video loaded successfully!');
+          }}
         >
-          <source type="video/mp4" />
+          {videoSrc && <source src={videoSrc} type="video/mp4" />}
           Your browser does not support the video tag.
         </video>
       </div>
