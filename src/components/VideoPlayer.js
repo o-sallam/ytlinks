@@ -9,7 +9,7 @@ const VideoPlayer = () => {
   const [error, setError] = useState(null);
   const videoRef = useRef(null);
   const { videoId } = useParams();
-  const apiRoute = "https://ytlinks-backend-production.up.railway.app";
+  const apiRoute = process.env.REACT_APP_API_ROUTE || "https://ytlinks-backend-production.up.railway.app";
   
 
   useEffect(() => {
@@ -21,8 +21,10 @@ const VideoPlayer = () => {
 
         // Set up video source after getting details
         if (videoRef.current) {
-          videoRef.current.src = `${apiRoute}/api/stream/${videoId}`;
+          const videoSrc = `${apiRoute}/api/stream/${videoId}`;
+          videoRef.current.src = videoSrc;
           videoRef.current.load();
+          console.log('Video src set:', videoSrc);
         }
       } catch (err) {
         setError('Failed to load video details');
