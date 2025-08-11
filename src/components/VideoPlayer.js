@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './VideoPlayer.css';
@@ -7,8 +7,10 @@ const VideoPlayer = () => {
   const [videoDetails, setVideoDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const videoRef = useRef(null);
   const { videoId } = useParams();
-  const apiRoute = "https://fearless-wisdom-production.up.railway.app";
+  const apiRoute = "https://ytlinks-backend-production.up.railway.app";
+  
 
   useEffect(() => {
     const fetchVideoDetails = async () => {
@@ -16,6 +18,12 @@ const VideoPlayer = () => {
         const response = await axios.get(`${apiRoute}/api/video/${videoId}`);
         setVideoDetails(response.data);
         setLoading(false);
+
+        // Set up video source after getting details
+        if (videoRef.current) {
+          videoRef.current.src = `${apiRoute}/api/stream/${videoId}`;
+          videoRef.current.load();
+        }
       } catch (err) {
         setError('Failed to load video details');
         setLoading(false);
@@ -24,7 +32,12 @@ const VideoPlayer = () => {
     };
 
     fetchVideoDetails();
-  }, [videoId]);
+  }, [videoId, apiRoute]);
+
+  const handleTimeUpdate = () => {
+    // You can add time-based features here
+    console.log('Current time:', videoRef.current?.currentTime);
+  };
 
   if (loading) {
     return <div className="loading">Loading...</div>;
@@ -41,13 +54,16 @@ const VideoPlayer = () => {
   return (
     <div className="video-player-container">
       <div className="video-wrapper">
-        <iframe
-          src={videoDetails.embedUrl}
-          title={videoDetails.title}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
+        <video
+          ref={videoRef}
+          controls
+          autoPlay
+          className="video-player"
+          onTimeUpdate={handleTimeUpdate}
+        >
+          <source type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
       <div className="video-info">
         <h1>{videoDetails.title}</h1>

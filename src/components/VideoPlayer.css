@@ -12,15 +12,17 @@
   margin-bottom: 2rem;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: #000;
 }
 
-.video-wrapper iframe {
+.video-player {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   border-radius: 8px;
+  outline: none;
 }
 
 .video-info {
@@ -61,4 +63,39 @@
   padding: 2rem;
   color: #dc3545;
   font-size: 1.2rem;
+}
+
+/* Custom video player controls styling */
+.video-player::-webkit-media-controls {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.video-player::-webkit-media-controls-panel {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.video-player::-webkit-media-controls-play-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.video-player::-webkit-media-controls-timeline {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  height: 4px;
+}
+
+.video-player::-webkit-media-controls-current-time-display,
+.video-player::-webkit-media-controls-time-remaining-display {
+  color: #fff;
+  font-size: 12px;
+}
+
+.video-player::-webkit-media-controls-volume-slider {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  padding: 0 5px;
 }

@@ -19,7 +19,8 @@ const SearchPage = () => {
     
     setLoading(true);
     setError(null);
-        const apiRoute="https://fearless-wisdom-production.up.railway.app";
+        const apiRoute="https://ytlinks-backend-production.up.railway.app";
+        
 
     try {
       const response = await axios.get(`${apiRoute}/api/youtube_search?keyword=${encodeURIComponent(keyword)}`);
