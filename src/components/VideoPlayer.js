@@ -10,6 +10,7 @@ const VideoPlayer = () => {
   const videoRef = useRef(null);
   const { videoId } = useParams();
   const apiRoute = process.env.REACT_APP_API_ROUTE || "https://ytlinks-backend-production.up.railway.app";
+console.log('VideoPlayer mounted', { videoId, apiRoute });
   
 
   useEffect(() => {
@@ -30,6 +31,7 @@ const VideoPlayer = () => {
         setError('Failed to load video details');
         setLoading(false);
         console.error('Error loading video:', err);
+        console.log('Debug info', { videoId, apiRoute });
       }
     };
 
