@@ -58,7 +58,17 @@ const CustomPlayer = ({ videoId, videoTitle }) => {
   
   // Player event handlers
   const onPlayerReady = (event) => {
-    setDuration(event.target.getDuration());
+    let tries = 0;
+    function checkDuration() {
+      const dur = event.target.getDuration();
+      if (dur && dur > 0) {
+        setDuration(dur);
+      } else if (tries < 10) {
+        tries++;
+        setTimeout(checkDuration, 200);
+      }
+    }
+    checkDuration();
   };
   
   const onPlayerStateChange = (event) => {
